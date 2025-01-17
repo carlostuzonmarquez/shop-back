@@ -18,3 +18,12 @@ model Category {
   name      String
   canonical String
 }
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  canonical   String
+  stock       Int
+  description String   @db.LongText
+  createdAt   DateTime @default(now())
+}
