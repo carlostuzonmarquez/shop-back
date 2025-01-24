@@ -20,14 +20,14 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  deleteCategory(@Param('id', ParseIntPipe) id: number) {
-    this.categoryService.deleteCategory(id);
+  async deleteCategory(@Param('id', ParseIntPipe) id: number) {
+    await this.categoryService.deleteCategory(id);
     return this.categoryService.getAll()
   }
 
   @Patch('edit')
   updateCategory(@Body() editCategoryDto: EditCategoryDto) {
     this.categoryService.updateCategory(editCategoryDto);
-
+    return JSON.stringify({ message: 'ok' })
   }
 }

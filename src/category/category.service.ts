@@ -27,7 +27,7 @@ export class CategoryService {
 
   async updateCategory(editCategoryDto: EditCategoryDto) {
     return await this.prismaService.category.update({
-      where: { id: parseInt(editCategoryDto.id) },
+      where: { id: editCategoryDto.id },
       data: { name: editCategoryDto.name, canonical: canonicalize(editCategoryDto.name) }
     });
   }
