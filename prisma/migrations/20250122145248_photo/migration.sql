@@ -5,10 +5,10 @@
 
 */
 -- DropForeignKey
-ALTER TABLE `photos` DROP FOREIGN KEY `Photos_productId_fkey`;
+ALTER TABLE `Photos` DROP FOREIGN KEY `Photos_productId_fkey`;
 
 -- DropTable
-DROP TABLE `photos`;
+DROP TABLE `Photos`;
 
 -- CreateTable
 CREATE TABLE `Photo` (
