@@ -13,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
+  async validate(payload) {
     // This payload will contain the decoded JWT (e.g., userId, username)
     return { userId: payload.sub, username: payload.username };
   }
