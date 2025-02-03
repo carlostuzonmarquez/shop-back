@@ -8,6 +8,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,14 +17,17 @@ import { UserModule } from './user/user.module';
     ProductModule,
     PhotoModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),  // Servir archivos desde 'uploads'
-      serveRoot: '/uploads',  // URL base para acceder a los archivos
+      rootPath: join(__dirname, '..', 'uploads'), // Servir archivos desde 'uploads'
+      serveRoot: '/uploads', // URL base para acceder a los archivos
     }),
     ConfigModule.forRoot({
-      isGlobal: true, // Permite que las variables estén disponibles en toda la app
+      isGlobal: true,
+      envFilePath: '.env',
     }),
-    UserModule],
+    UserModule,
+    AuthModule,
+  ],
   controllers: [],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
