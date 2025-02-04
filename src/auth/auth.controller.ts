@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { UserService } from 'src/user/user.service';
+import * as argon2 from 'argon2'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly userService: UserService) { }
 
   @Post('login')
   async login(@Body() credentials: { username: string; password: string }) {
@@ -26,10 +28,14 @@ export class AuthController {
     password: string;
   }): Promise<any> {
     // Replace with actual user validation logic
-    const user = { userId: 1, username: 'admin', password: 'admin' };
+    const user = await this.userService.findByEmail(credentials.username);
+    const encodedPassword = await argon2.hash(credentials.password);
+    console.log(credentials.password)
+    console.log(encodedPassword)
+    console.log(user.password)
     if (
       credentials.username === user.username &&
-      credentials.password === user.password
+      encodedPassword === user.password
     ) {
       return user;
     }

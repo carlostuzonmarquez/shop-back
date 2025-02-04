@@ -36,5 +36,9 @@ export class UserService {
         });
     }
 
-
+    async findByEmail(username: string) {
+        return await this.prismaService.user.findFirst({
+            where: { username: username }
+        })
+    }
 }

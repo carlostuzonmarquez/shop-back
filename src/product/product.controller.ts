@@ -15,9 +15,8 @@ import { EditProductDto } from './dto/EditProductDto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('product')
-@UseGuards(AuthGuard('jwt'))
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   @Post('create')
   createProduct(@Body() createProduct: CreateProductDto) {

@@ -14,10 +14,10 @@ import { EditCategoryDto } from './dto/editcategory.dto';
 import { CreateCategoryDto } from './dto/createcategory.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard('jwt'))
+
 @Controller('category')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(private readonly categoryService: CategoryService) { }
 
   @Post('create')
   createCategory(@Body() createCategoryDto: CreateCategoryDto) {

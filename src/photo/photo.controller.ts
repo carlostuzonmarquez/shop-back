@@ -18,12 +18,11 @@ import { promisify } from 'util';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('photo')
-@UseGuards(AuthGuard('jwt'))
 export class PhotoController {
   constructor(
     private readonly phothoService: PhotoService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
   @Post(':productId')
   @UseInterceptors(
     FileInterceptor('file', {

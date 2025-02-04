@@ -15,9 +15,8 @@ import { EditUserDto } from './dto/EditUser.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
-@UseGuards(AuthGuard('jwt'))
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post('create')
   createUSer(@Body() createUserDto: CreateUserDto) {
