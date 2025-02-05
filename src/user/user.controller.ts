@@ -37,6 +37,10 @@ export class UserController {
   @Patch('edit')
   updateUser(@Body() editUserDto: EditUserDto) {
     this.userService.updateUser(editUserDto);
-    return JSON.stringify({ message: 'ok' });
+    return { message: 'ok' };
+  }
+  @Get(':id')
+  findUser(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findById(id)
   }
 }
