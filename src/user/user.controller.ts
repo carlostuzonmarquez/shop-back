@@ -16,7 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post('create')
   createUSer(@Body() createUserDto: CreateUserDto) {
@@ -38,5 +38,14 @@ export class UserController {
   updateUser(@Body() editUserDto: EditUserDto) {
     this.userService.updateUser(editUserDto);
     return JSON.stringify({ message: 'ok' });
+  }
+
+  @Get(':id')
+  findById(@Param('id', ParseIntPipe) id: number) {
+    try {
+      return this.userService.findById(id);
+    } catch (error) {
+      return { message: error.message };
+    }
   }
 }
