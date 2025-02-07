@@ -15,13 +15,14 @@ import { EditProductDto } from './dto/EditProductDto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('product')
+@UseGuards(AuthGuard('jwt'))
 export class ProductController {
-  constructor(private readonly productService: ProductService) { }
+  constructor(private readonly productService: ProductService) {}
 
   @Post('create')
   createProduct(@Body() createProduct: CreateProductDto) {
     this.productService.createProduct(createProduct);
-    return JSON.stringify({ message: 'ok' });
+    return { message: 'ok' };
   }
   @Get('list')
   listProduct() {
@@ -35,7 +36,7 @@ export class ProductController {
   @Patch('edit')
   updateProduct(@Body() editProductDto: EditProductDto) {
     this.productService.updateProduct(editProductDto);
-    return JSON.stringify({ message: 'ok' });
+    return { message: 'ok' };
   }
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number) {

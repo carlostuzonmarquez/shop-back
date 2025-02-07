@@ -6,7 +6,7 @@ import { EditCategoryDto } from './dto/editcategory.dto';
 
 @Injectable()
 export class CategoryService {
-  constructor(private prismaService: PrismaService) { }
+  constructor(private prismaService: PrismaService) {}
 
   async createCategory(createCategoryDto: CreateCategoryDto) {
     await this.prismaService.category.create({
@@ -18,17 +18,30 @@ export class CategoryService {
   }
 
   async getAll() {
-    return await this.prismaService.category.findMany()
+    return await this.prismaService.category.findMany();
   }
 
   async deleteCategory(id: number) {
-    await this.prismaService.category.delete({ where: { id } })
+    await this.prismaService.category.delete({ where: { id } });
   }
 
   async updateCategory(editCategoryDto: EditCategoryDto) {
     return await this.prismaService.category.update({
       where: { id: editCategoryDto.id },
-      data: { name: editCategoryDto.name, canonical: canonicalize(editCategoryDto.name) }
+      data: {
+        name: editCategoryDto.name,
+        canonical: canonicalize(editCategoryDto.name),
+      },
     });
+  }
+
+  async findById(id: number) {
+    try {
+      return await this.prismaService.category.findUnique({
+        where: { id },
+      });
+    } catch (error) {
+      throw new Error('Category not found');
+    }
   }
 }

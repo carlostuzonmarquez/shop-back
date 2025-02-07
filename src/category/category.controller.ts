@@ -14,15 +14,15 @@ import { EditCategoryDto } from './dto/editcategory.dto';
 import { CreateCategoryDto } from './dto/createcategory.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-
 @Controller('category')
+@UseGuards(AuthGuard('jwt'))
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) { }
+  constructor(private readonly categoryService: CategoryService) {}
 
   @Post('create')
   createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     this.categoryService.createCategory(createCategoryDto);
-    return JSON.stringify({ message: 'ok' });
+    return { message: 'ok' };
   }
 
   @Get('list')
@@ -39,6 +39,15 @@ export class CategoryController {
   @Patch('edit')
   updateCategory(@Body() editCategoryDto: EditCategoryDto) {
     this.categoryService.updateCategory(editCategoryDto);
-    return JSON.stringify({ message: 'ok' });
+    return { message: 'ok' };
+  }
+
+  @Get(':id')
+  findById(@Param('id', ParseIntPipe) id: number) {
+    try {
+      return this.categoryService.findById(id);
+    } catch (error) {
+      return { message: error.message };
+    }
   }
 }

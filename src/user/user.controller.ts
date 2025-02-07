@@ -15,13 +15,14 @@ import { EditUserDto } from './dto/EditUser.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
+@UseGuards(AuthGuard('jwt'))
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('create')
   createUSer(@Body() createUserDto: CreateUserDto) {
     this.userService.createUser(createUserDto);
-    return JSON.stringify({ message: 'ok' });
+    return { message: 'ok' };
   }
 
   @Get('list')
@@ -37,7 +38,7 @@ export class UserController {
   @Patch('edit')
   updateUser(@Body() editUserDto: EditUserDto) {
     this.userService.updateUser(editUserDto);
-    return JSON.stringify({ message: 'ok' });
+    return { message: 'ok' };
   }
 
   @Get(':id')
