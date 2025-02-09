@@ -13,15 +13,38 @@ import { CreateProductDto } from './dto/CreateProduct.dto';
 import { ProductService } from './product.service';
 import { EditProductDto } from './dto/EditProductDto';
 import { AuthGuard } from '@nestjs/passport';
+import * as fs from 'fs';
+import * as path from 'path';
+import { PhotoService } from 'src/photo/photo.service';
 
 @Controller('product')
 @UseGuards(AuthGuard('jwt'))
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly photoService: PhotoService,
+  ) {}
 
   @Post('create')
-  createProduct(@Body() createProduct: CreateProductDto) {
-    this.productService.createProduct(createProduct);
+  async createProduct(@Body() createProduct: CreateProductDto) {
+    const product = await this.productService.createProduct(createProduct);
+    const tmpFolderPath = path.resolve(process.cwd(), 'uploads/tmp');
+    const productFolderPath = path.resolve(
+      process.cwd(),
+      'uploads/' + product.id,
+    );
+
+    if (!fs.existsSync(productFolderPath))
+      fs.mkdirSync(productFolderPath, { recursive: true });
+
+    createProduct.photos.forEach((photo) => {
+      fs.renameSync(
+        tmpFolderPath + '/' + photo,
+        productFolderPath + '/' + photo,
+      );
+      this.photoService.createPhoto(product.id, photo);
+    });
+
     return { message: 'ok' };
   }
   @Get('list')
