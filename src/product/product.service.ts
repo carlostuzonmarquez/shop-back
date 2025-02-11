@@ -36,6 +36,7 @@ export class ProductService {
         ProductCategory: {
           include: { category: true },
         },
+        Photos: true,
       },
     });
   }
@@ -60,6 +61,7 @@ export class ProductService {
       where: { id },
       include: {
         ProductCategory: true,
+        Photos: true,
       },
     });
   }

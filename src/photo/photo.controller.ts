@@ -62,10 +62,13 @@ export class PhotoController {
         .toFile(filePath);
 
       // Guardar en la base de datos
-      await this.photoService.createPhoto(productId, filename);
+      const photo = await this.photoService.createPhoto(productId, filename);
 
       return {
-        photo: `${this.configService.get<string>('PHOTOS_BASE_URL')}${productId}/${filename}`,
+        preview: `${this.configService.get<string>('PHOTOS_BASE_URL')}${productId}/${filename}`,
+        filename: filename,
+        id: photo.id,
+        path: photo.path,
       };
     } catch (error) {
       throw new Error(`Error procesando la imagen: ${error.message}`);
@@ -78,9 +81,10 @@ export class PhotoController {
     const photo = await this.photoService.findById(id);
     const photoPath = './uploads/' + photo.path;
     if (existsSync(photoPath)) {
-      unlinkAsync(photoPath);
+      await unlinkAsync(photoPath);
     }
     this.photoService.deletePhoto(id);
+    return { message: 'ok' };
   }
 
   @Post()

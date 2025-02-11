@@ -35,8 +35,8 @@ model Product {
 model ProductCategory {
   productId  Int
   categoryId Int
-  product    Product  @relation(fields: [productId], references: [id])
-  category   Category @relation(fields: [categoryId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@id([productId, categoryId])
 }
@@ -45,7 +45,7 @@ model Photo {
   id        Int     @id @default(autoincrement())
   path      String
   productId Int
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model User {

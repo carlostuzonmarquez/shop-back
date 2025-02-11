@@ -53,8 +53,19 @@ export class ProductController {
   }
   @Delete(':id')
   async deleteProduct(@Param('id', ParseIntPipe) id: number) {
-    await this.productService.deleteProduct(id);
-    return this.productService.getAll();
+    try {
+      const product = await this.productService.findById(id);
+      if (product.Photos.length > 0) {
+        product.Photos.map((photo) => {
+          fs.unlinkSync(path.resolve(process.cwd(), 'uploads/' + photo.path));
+        });
+      }
+      await this.productService.deleteProduct(id);
+      return { message: 'ok' };
+    } catch (err) {
+      console.log(err);
+      return { message: 'Cannot delete the product with id: ' + id };
+    }
   }
   @Patch('edit')
   updateProduct(@Body() editProductDto: EditProductDto) {
