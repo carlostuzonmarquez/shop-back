@@ -34,9 +34,23 @@ export class ProductService {
 
     return product;
   }
-  async getAllWithFilters(page: number) {
+
+  async getAllWithFilters(page: number, categoryCanonical: string) {
+    const whereConditions = categoryCanonical
+      ? {
+          ProductCategory: {
+            some: {
+              category: {
+                canonical: categoryCanonical,
+              },
+            },
+          },
+        }
+      : {};
+
     const findManyParams: {
       include: object;
+      where?: object;
       skip?: number;
       take?: number;
     } = {
@@ -46,6 +60,7 @@ export class ProductService {
         },
         Photos: true,
       },
+      where: whereConditions,
     };
 
     if (page > 0) {
@@ -56,7 +71,9 @@ export class ProductService {
       findManyParams.take = productsPerPage;
     }
 
-    const totalProducts = await this.prismaService.product.count();
+    const totalProducts = await this.prismaService.product.count({
+      where: whereConditions,
+    });
 
     return {
       products: await this.prismaService.product.findMany(findManyParams),

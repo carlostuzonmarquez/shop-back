@@ -18,7 +18,9 @@ export class CategoryService {
   }
 
   async getAll() {
-    return await this.prismaService.category.findMany();
+    return await this.prismaService.category.findMany({
+      orderBy: { name: 'asc' },
+    });
   }
 
   async deleteCategory(id: number) {

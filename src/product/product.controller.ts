@@ -49,8 +49,16 @@ export class ProductController {
     return { message: 'ok' };
   }
   @Get('list/:page')
-  getFilteredProducts(@Param('page', ParseIntPipe) page: number = 0) {
-    return this.productService.getAllWithFilters(page);
+  getPaginatedProducts(@Param('page', ParseIntPipe) page: number) {
+    return this.productService.getAllWithFilters(page, undefined);
+  }
+
+  @Get('list/:page/:categoryCanonical')
+  getPaginatedCategoryProducts(
+    @Param('page', ParseIntPipe) page: number,
+    @Param('categoryCanonical') categoryCanonical: string,
+  ) {
+    return this.productService.getAllWithFilters(page, categoryCanonical);
   }
 
   @Get('all')
