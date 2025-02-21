@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage, memoryStorage } from 'multer';
+import { memoryStorage } from 'multer';
 import { extname } from 'path';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -54,10 +54,14 @@ export class PhotoController {
     try {
       // Redimensionar y recortar con Sharp
       await sharp(file.buffer)
-        .resize(350, 350, {
-          fit: 'cover', // Mantiene la proporción y recorta el exceso
-          position: 'center', // Recorte centrado
-        })
+        .resize(
+          parseInt(this.configService.get('PHOTOS_WIDTH')),
+          parseInt(this.configService.get('PHOTOS_HEIGHT')),
+          {
+            fit: 'cover', // Mantiene la proporción y recorta el exceso
+            position: 'center', // Recorte centrado
+          },
+        )
         .toFormat('jpeg') // Convertir a JPEG
         .toFile(filePath);
 
@@ -109,12 +113,17 @@ export class PhotoController {
     const filePath = `${uploadPath}/${filename}`;
 
     try {
+      console.log(this.configService.get<number>('PHOTO_WIDTH'));
       // Redimensionar y recortar con Sharp
       await sharp(file.buffer)
-        .resize(350, 350, {
-          fit: 'cover', // Mantiene la proporción y recorta el exceso
-          position: 'center', // Recorte centrado
-        })
+        .resize(
+          parseInt(this.configService.get('PHOTOS_WIDTH')),
+          parseInt(this.configService.get('PHOTOS_HEIGHT')),
+          {
+            fit: 'cover', // Mantiene la proporción y recorta el exceso
+            position: 'center', // Recorte centrado
+          },
+        )
         .toFormat('jpeg') // Convertir a JPEG para mejor compatibilidad
         .toFile(filePath);
 
