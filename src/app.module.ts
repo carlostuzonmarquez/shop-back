@@ -7,6 +7,7 @@ import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { AppService } from "./app.service";
 import { Module } from "@nestjs/common";
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { Module } from "@nestjs/common";
     }),
     UserModule,
     AuthModule,
+    SearchModule,
   ],
   controllers: [],
   providers: [AppService],

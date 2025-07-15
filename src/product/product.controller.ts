@@ -27,6 +27,7 @@ export class ProductController {
   listProduct() {
     return this.productService.getAll();
   }
+  
   @Delete(':id')
   async deleteProduct(@Param('id', ParseIntPipe) id: number) {
     await this.productService.deleteProduct(id);
