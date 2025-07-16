@@ -21,4 +21,30 @@ export class PhotoService {
     async deletePhoto(id: number) {
         await this.prismaService.photo.delete({ where: { id } })
     }
+async findByFilename(filename: string) {
+  return await this.prismaService.photo.findFirst({
+    where: {
+      path: {
+        endsWith: filename,
+      },
+    },
+  });
 }
+async createPhotoTemp(productId: number | null, filename: string) {
+  const data: any = {
+    path: `tmp/${filename}`,
+  };
+
+  if (productId !== null) {
+    data.productId = productId;
+  }
+
+  return this.prismaService.photo.create({
+    data,
+  });
+}
+
+
+
+}
+

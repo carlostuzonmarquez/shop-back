@@ -26,4 +26,7 @@ export class CreateProductDto {
     @IsNumber({}, { each: true })
     @Transform(({ value }) => value.map(Number))
     categories: number[]
+
+
+      photos: string[];
 }

@@ -7,12 +7,13 @@ import {
   Param,
   Delete,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { extname, join } from 'path';
 import { PhotoService } from './photo.service';
-import { existsSync, mkdirSync, unlink } from 'fs';
+import { existsSync, mkdirSync, unlink, unlinkSync } from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { promisify } from 'util';
 import { AuthGuard } from '@nestjs/passport';
@@ -23,6 +24,34 @@ export class PhotoController {
     private readonly phothoService: PhotoService,
     private readonly configService: ConfigService,
   ) { }
+@Post('')
+@UseInterceptors(
+  FileInterceptor('file', {
+    storage: diskStorage({
+      destination: (req, file, callback) => {
+        const uploadPath = `./uploads/tmp`;
+        if (!existsSync(uploadPath)) {
+          mkdirSync(uploadPath, { recursive: true });
+        }
+        callback(null, uploadPath);
+      },
+      filename: (req, file, callback) => {
+          const filename =   Date.now().toString(36) + '-' + Math.floor(Math.random() * 1e6).toString(36);
+
+        const ext = extname(file.originalname);
+        callback(null, `${filename}.jpg`); // ✅ sin símbolo $
+      },
+    }),
+  }),
+)
+async uploadNewPhoto(@UploadedFile() file: Express.Multer.File) {
+  return {
+    photo: this.configService.get<string>('PHOTOS_TMP_URL') + file.filename,
+    filename: file.filename,
+  };
+}
+
+
   @Post(':productId')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -40,14 +69,14 @@ export class PhotoController {
         },
 
         filename: (req, file, callback) => {
-          const filename = Date.now() + Math.round(Math.random() * 1e9);
+          const filename =   Date.now().toString(36) + '-' + Math.floor(Math.random() * 1e6).toString(36);
           const ext = extname(file.originalname);
           callback(null, `${filename}${ext}`);
         },
       }),
     }),
   )
-  async uploadPhoto(
+  async uploadEditPhoto(
     @UploadedFile() file: Express.Multer.File,
     @Param('productId', ParseIntPipe) productId: number,
   ) {
@@ -70,4 +99,18 @@ export class PhotoController {
     }
     this.phothoService.deletePhoto(id);
   }
+  @Delete('by-filename/:filename')
+  async deleteByFilename(@Param('filename') filename: string) {
+    const photoPath = join('./uploads/tmp', filename);
+
+    if (!existsSync(photoPath)) {
+      throw new NotFoundException('Archivo no encontrado');
+    }
+
+    unlinkSync(photoPath); // Borra el archivo de forma síncrona
+
+    return { message: 'Archivo eliminado correctamente' };
+  }
+
 }
+

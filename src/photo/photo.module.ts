@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Module({
   controllers: [PhotoController],
-  providers: [PhotoService, PrismaService, ConfigService]
+  providers: [PhotoService, PrismaService, ConfigService],
+  exports:[PhotoService]
 })
 export class PhotoModule { }
