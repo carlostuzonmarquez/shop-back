@@ -32,7 +32,7 @@ export class ProductService {
   }
 
   async getAll() {
-    return await this.prismaService.product.findMany({
+    const productos= await this.prismaService.product.findMany({
       include: {
         ProductCategory: {
           include: {
@@ -41,8 +41,12 @@ export class ProductService {
         },
         Photos: true,
       },
+
     });
-  }
+    return productos.map((product) => ({
+  ...product,
+  categories: product.ProductCategory.map((pc) => pc.category),
+  }))}
 
   async deleteProduct(id: number) {
     await this.prismaService.product.delete({ where: { id } });

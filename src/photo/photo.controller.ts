@@ -71,7 +71,7 @@ async uploadNewPhoto(@UploadedFile() file: Express.Multer.File) {
         filename: (req, file, callback) => {
           const filename =   Date.now().toString(36) + '-' + Math.floor(Math.random() * 1e6).toString(36);
           const ext = extname(file.originalname);
-          callback(null, `${filename}${ext}`);
+          callback(null, `${filename}.jpg`);
         },
       }),
     }),
