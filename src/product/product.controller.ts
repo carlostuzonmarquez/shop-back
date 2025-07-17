@@ -7,13 +7,10 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/CreateProduct.dto';
 import { ProductService } from './product.service';
 import { EditProductDto } from './dto/EditProductDto';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { existsSync, mkdirSync, renameSync } from 'fs';
 import { PhotoService } from 'src/photo/photo.service';
 
