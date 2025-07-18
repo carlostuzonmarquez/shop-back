@@ -1,6 +1,7 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { ConfigService } from '@nestjs/config';
+import { get } from 'http';
 
 @Controller('search')
 export class SearchController {
@@ -29,6 +30,45 @@ export class SearchController {
     );
     const totalProducts =
       await this.searchService.totalProducts(categoryCanonical);
+    const totalPages = Math.ceil(
+      totalProducts / parseInt(this.configService.get('PRODUCT_PAGE')),
+    );
+    return { products: products, totalPages: totalPages };
+  }
+  @Get('product/list/:page/:categoryCanonical/:orderBy')
+  async listProductsByCategoryOrderBy(
+    @Param('page', ParseIntPipe) page: number,
+    @Param('categoryCanonical') categoryCanonical: string,
+    @Param('orderBy') orderBy: string,
+  ) {
+    const products = await this.searchService.listProductsWhithFilters(
+      page,
+      categoryCanonical,
+      orderBy,
+    );
+    const totalProducts =
+      await this.searchService.totalProducts(categoryCanonical);
+    const totalPages = Math.ceil(
+      totalProducts / parseInt(this.configService.get('PRODUCT_PAGE')),
+    );
+    return { products: products, totalPages: totalPages };
+  }
+
+  @Get('product/:page/:searchText')
+  async searchProductsByText(
+    @Param('page', ParseIntPipe) page: number,
+    @Param('searchText') searchText: string,
+  ) {
+    const products = await this.searchService.listProductsWhithFilters(
+      page,
+      undefined,
+      undefined,
+      searchText,
+    );
+    const totalProducts = await this.searchService.totalProducts(
+      undefined,
+      searchText,
+    );
     const totalPages = Math.ceil(
       totalProducts / parseInt(this.configService.get('PRODUCT_PAGE')),
     );
