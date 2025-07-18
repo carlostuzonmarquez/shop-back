@@ -18,7 +18,7 @@ export class SearchService {
     let whereConditions = {};
     if (categoryCanonical) {
       whereConditions = {
-        ProductCategory: {
+        productCategory: {
           //alguno que tenga la categoria cacanonical
           some: {
             category: {
@@ -48,7 +48,7 @@ export class SearchService {
       take: parseInt(this.configService.get('PRODUCT_PAGE')), //take cuantos quieres que coja
       orderBy: orderByConditions,
       include: {
-        ProductCategory: {
+        productCategory: {
           include: { category: true },
         },
         Photos: true,
@@ -61,7 +61,7 @@ export class SearchService {
     let whereConditions = {};
     if (categoryCanonical) {
       whereConditions = {
-        ProductCategory: {
+        productCategory: {
           //alguno que tenga la categoria cacanonical
           some: {
             category: {

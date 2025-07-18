@@ -34,7 +34,7 @@ export class ProductService {
   async getAll() {
     const productos = await this.prismaService.product.findMany({
       include: {
-        ProductCategory: {
+        productCategory: {
           include: {
             category: true,
           },
@@ -44,7 +44,7 @@ export class ProductService {
     });
     return productos.map((product) => ({
       ...product,
-      categories: product.ProductCategory.map((pc) => pc.category),
+      categories: product.productCategory.map((pc) => pc.category),
     }));
   }
 
@@ -69,7 +69,7 @@ export class ProductService {
     return await this.prismaService.product.findUnique({
       where: { id },
       include: {
-        ProductCategory: {
+        productCategory: {
           include: {
             category: true,
           },

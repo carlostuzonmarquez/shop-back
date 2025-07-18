@@ -17,7 +17,7 @@ model Category {
   id           Int               @id @default(autoincrement())
   name            String
   canonical       String
-  ProductCategory ProductCategory[]
+  productCategory ProductCategory[]
 }
 
 model Product {
@@ -28,7 +28,7 @@ model Product {
   stock           Int
   description     String            @db.LongText
   createdAt       DateTime          @default(now())
-  ProductCategory ProductCategory[]
+  productCategory ProductCategory[]
   Photos          Photo[]
 }
 
