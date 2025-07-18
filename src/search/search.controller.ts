@@ -1,7 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { ConfigService } from '@nestjs/config';
-import { get } from 'http';
 
 @Controller('search')
 export class SearchController {
