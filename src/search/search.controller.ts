@@ -41,13 +41,17 @@ export class SearchController {
     @Param('categoryCanonical') categoryCanonical: string,
     @Param('orderBy') orderBy: string,
   ) {
+    categoryCanonical =
+      categoryCanonical === 'all' ? undefined : categoryCanonical;
     const products = await this.searchService.listProductsWhithFilters(
       page,
       categoryCanonical,
       orderBy,
     );
-    const totalProducts =
-      await this.searchService.totalProducts(categoryCanonical);
+    const totalProducts = await this.searchService.totalProducts(
+      categoryCanonical,
+      orderBy,
+    );
     const totalPages = Math.ceil(
       totalProducts / parseInt(this.configService.get('PRODUCT_PAGE')),
     );
